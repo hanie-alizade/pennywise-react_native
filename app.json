@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "Pennywise",
+    "slug": "pennywise",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "scheme": "pennywise",
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}

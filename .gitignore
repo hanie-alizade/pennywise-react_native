@@ -1,2 +1,25 @@
-docs/*
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Native builds (if generated)
+android/
+ios/
+
+# Environment
 .env
+.env*.local
+
+# Logs and system files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+#Docs
+docs/*
