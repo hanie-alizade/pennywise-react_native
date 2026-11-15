@@ -125,9 +125,10 @@ scripts/      check-rules.mjs
 
 React Hook Form + `Controller` + `zodResolver`. Schemas in `src/schemas` mirror API rules. Submit calls a `useMutationXxx` hook; API `details[]` (path/message) are mapped to fields with `setError`; other errors go to a form-level `Banner`.
 
-## Mock backend (while the real one is not ready)
+## Backend environments
 
-A mock server generated from `docs/openapi.yaml` (Prism, dev tool) serves canned responses. Switch by changing `EXPO_PUBLIC_API_URL`. The mock is for UI work; it does not enforce business rules. Do not rely on it for auth behavior or rule errors.
+- **Live backend (deployed):** `https://pennywise-api-two.vercel.app` (Express on Vercel Functions + Neon PostgreSQL). Default target for development and device testing.
+- **Mock backend (offline fallback):** A mock server generated from `docs/openapi.yaml` (Prism, dev tool) serves canned responses via `npm run mock`. Switch by pointing `EXPO_PUBLIC_API_URL` to `http://localhost:3000`. The mock is for isolated offline UI work; it does not enforce business rules or persist data.
 
 ## Key function contracts (paths are stable; adding exports is fine)
 
