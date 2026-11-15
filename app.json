@@ -21,6 +21,9 @@
     "scheme": "pennywise",
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }
