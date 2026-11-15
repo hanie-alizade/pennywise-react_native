@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "check:rules": "node scripts/check-rules.mjs",
-    "check": "npm run typecheck && npm run lint && npm run check:rules"
+    "check": "npm run typecheck && npm run lint && npm run check:rules",
+    "api:types": "openapi-typescript docs/openapi.yaml -o src/types/api.generated.ts",
+    "mock": "prism mock docs/openapi.yaml -p 3000"
   },
   "dependencies": {
     "expo": "~57.0.31",
@@ -22,13 +24,16 @@
     "react-dom": "19.2.3",
     "react-native": "0.86.3",
     "react-native-safe-area-context": "~5.10.1",
-    "react-native-screens": "~4.30.1"
+    "react-native-screens": "~4.30.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@stoplight/prism-cli": "^5.14.2",
     "@types/react": "~19.2.2",
     "eslint": "^9.20.0",
     "eslint-config-expo": "~58.0.0",
     "eslint-config-prettier": "^10.0.1",
+    "openapi-typescript": "^7.13.0",
     "prettier": "^3.5.0",
     "typescript": "~6.0.3"
   },
