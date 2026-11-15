@@ -1,113 +1,268 @@
+import { useMemo, useState } from "react";
 import type { ReactElement } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
+import {
+  AppText,
+  Badge,
+  Button,
+  Card,
+  Screen,
+  TextField,
+} from "@/components/ui";
+import type { BadgeVariant } from "@/components/ui";
+import { colors, spacing } from "@/theme";
 
+interface FakeRow {
+  id: string;
+  title: string;
+  category: string;
+  amountMinor: number;
+  date: string;
+  type: "income" | "expense";
+}
+
+/**
+ * Temporary demo screen for Step 1.3 (Inputs and lists).
+ * Demonstrates controlled TextField (valid and error states), Badge, Card,
+ * and a 200-row virtualized FlatList.
+ * Removed in Step 2.1.
+ */
 export default function IndexRoute(): ReactElement {
-  return (
-    <View style={styles.screen}>
+  const [categoryName, setCategoryName] = useState("Groceries");
+  const [expectedAmount, setExpectedAmount] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  // Fake dataset of 200 rows for virtualization testing
+  const fakeRows: FakeRow[] = useMemo(() => {
+    return Array.from({ length: 200 }, (_, index) => {
+      const rowNumber = index + 1;
+      const isIncome = rowNumber % 5 === 0;
+      return {
+        id: `txn-${rowNumber}`,
+        title: isIncome ? `Salary / Client #${rowNumber}` : `Expense #${rowNumber}`,
+        category: isIncome ? "Income" : rowNumber % 2 === 0 ? "Groceries" : "Transport",
+        amountMinor: (rowNumber * 1500) % 50000 + 1000,
+        date: "2026-11-15",
+        type: isIncome ? "income" : "expense",
+      };
+    });
+  }, []);
+
+  const amountError = useMemo(() => {
+    if (!expectedAmount.trim()) {
+      return "Amount is required";
+    }
+    if (!/^\d+$/.test(expectedAmount.trim())) {
+      return "Amount must contain integer numbers only";
+    }
+    return undefined;
+  }, [expectedAmount]);
+
+  const handleSubmit = (): void => {
+    setSubmitted(true);
+  };
+
+  const renderHeader = (): ReactElement => {
+    return (
       <View style={styles.header}>
-        <Text style={styles.appTitle}>Pennywise</Text>
-        <Text style={styles.stepTitle}>Phase 1 — Foundation: Layout & Flexbox</Text>
-      </View>
+        <View style={styles.titleSection}>
+          <AppText style={styles.brandTitle} variant="title">
+            Pennywise
+          </AppText>
+          <AppText variant="label">Phase 1 — Inputs & Lists Demo</AppText>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionHeading}>Flexbox Demo: Row Layout</Text>
-        <Text style={styles.description}>
-          The container below uses flexDirection: &quot;row&quot; with justifyContent:
-          &quot;space-between&quot;.
-        </Text>
+        <Card padding="md" style={styles.formCard} variant="default">
+          <AppText style={styles.sectionHeading} variant="label">
+            Controlled TextFields & Validation
+          </AppText>
 
-        <View style={styles.rowDemo}>
-          <View style={styles.box}>
-            <Text style={styles.boxLabel}>Box 1</Text>
+          <TextField
+            accessibilityHint="Enter name for the category"
+            autoCapitalize="words"
+            helperText="Valid state: Category name"
+            label="Category Name"
+            onChangeText={setCategoryName}
+            placeholder="e.g. Groceries"
+            value={categoryName}
+          />
+
+          <TextField
+            accessibilityHint="Enter integer minor amount for the budget"
+            error={submitted ? amountError : undefined}
+            helperText={submitted ? undefined : "Enter numbers only (triggers error if empty or non-numeric)"}
+            keyboardType="number-pad"
+            label="Monthly Expected Amount"
+            onChangeText={setExpectedAmount}
+            placeholder="e.g. 25000"
+            value={expectedAmount}
+          />
+
+          <Button
+            accessibilityHint="Submits form to validate the amount field"
+            onPress={handleSubmit}
+            style={styles.submitButton}
+            title="Validate Form"
+            variant="primary"
+          />
+        </Card>
+
+        <Card padding="md" style={styles.badgesCard} variant="outlined">
+          <AppText style={styles.sectionHeading} variant="label">
+            Badge Semantic Variants
+          </AppText>
+          <View style={styles.badgesRow}>
+            <Badge label="Income" variant="income" />
+            <Badge label="Expense" variant="expense" />
+            <Badge label="Warning" variant="warning" />
+            <Badge label="Info" variant="info" />
+            <Badge label="Neutral" variant="neutral" />
           </View>
-          <View style={styles.box}>
-            <Text style={styles.boxLabel}>Box 2</Text>
-          </View>
-          <View style={styles.box}>
-            <Text style={styles.boxLabel}>Box 3</Text>
-          </View>
+        </Card>
+
+        <View style={styles.listHeaderTitle}>
+          <AppText style={styles.listSectionTitle} variant="label">
+            Virtualized List (200 Items)
+          </AppText>
         </View>
       </View>
+    );
+  };
 
-      <View style={styles.section}>
-        <Text style={styles.sectionHeading}>Layout Concept</Text>
-        <Text style={styles.infoText}>
-          1. React Native defaults to flexDirection: &quot;column&quot; (unlike web which defaults to
-          &quot;row&quot;).
-        </Text>
-        <Text style={styles.infoText}>
-          2. All numeric dimensions (like padding: 16) are density-independent units (dp/points).
-        </Text>
-        <Text style={styles.infoText}>
-          3. Yoga calculates the layout in C++ before native views are drawn.
-        </Text>
+  const renderItem = ({ item }: { item: FakeRow }): ReactElement => {
+    const badgeVariant: BadgeVariant =
+      item.type === "income" ? "income" : "expense";
+    const amountPrefix = item.type === "income" ? "+" : "-";
+
+    return (
+      <Card padding="sm" style={styles.rowCard} variant="default">
+        <View style={styles.rowContent}>
+          <View style={styles.rowLeft}>
+            <AppText style={styles.itemTitle} variant="body">
+              {item.title}
+            </AppText>
+            <View style={styles.rowMeta}>
+              <Badge label={item.category} size="sm" variant={badgeVariant} />
+              <AppText style={styles.itemDate} variant="label">
+                {item.date}
+              </AppText>
+            </View>
+          </View>
+
+          <View style={styles.rowRight}>
+            <AppText style={styles.itemAmount} variant="mono">
+              {amountPrefix}MYR {(item.amountMinor / 100).toFixed(2)}
+            </AppText>
+          </View>
+        </View>
+      </Card>
+    );
+  };
+
+  const renderSeparator = (): ReactElement => {
+    return <View style={styles.separator} />;
+  };
+
+  const renderEmpty = (): ReactElement => {
+    return (
+      <View style={styles.emptyContainer}>
+        <AppText variant="body">No rows found.</AppText>
       </View>
-    </View>
+    );
+  };
+
+  return (
+    <Screen keyboardAvoiding={true} scrollable={false}>
+      <FlatList
+        ListEmptyComponent={renderEmpty}
+        ListHeaderComponent={renderHeader}
+        contentContainerStyle={styles.listContent}
+        data={fakeRows}
+        initialNumToRender={15}
+        ItemSeparatorComponent={renderSeparator}
+        keyExtractor={(item) => item.id}
+        keyboardShouldPersistTaps="handled"
+        maxToRenderPerBatch={10}
+        renderItem={renderItem}
+        windowSize={5}
+      />
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 24,
-    justifyContent: "flex-start",
+  listContent: {
+    padding: spacing.md,
   },
   header: {
-    marginBottom: 24,
+    marginBottom: spacing.sm,
   },
-  appTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "black",
-    marginBottom: 4,
+  titleSection: {
+    marginBottom: spacing.md,
   },
-  stepTitle: {
-    fontSize: 16,
-    color: "gray",
+  brandTitle: {
+    marginBottom: spacing.xxs,
   },
-  section: {
-    marginBottom: 24,
+  formCard: {
+    marginBottom: spacing.md,
+  },
+  badgesCard: {
+    marginBottom: spacing.md,
   },
   sectionHeading: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "black",
-    marginBottom: 8,
+    color: colors.primary,
+    marginBottom: spacing.sm,
   },
-  description: {
-    fontSize: 14,
-    color: "dimgray",
-    marginBottom: 12,
+  submitButton: {
+    marginTop: spacing.xs,
   },
-  rowDemo: {
+  badgesRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs,
+  },
+  listHeaderTitle: {
+    paddingVertical: spacing.xs,
+  },
+  listSectionTitle: {
+    color: colors.textSecondary,
+  },
+  rowCard: {
+    borderColor: colors.border,
+  },
+  rowContent: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "lightgray",
-    borderRadius: 8,
   },
-  box: {
-    width: 70,
-    height: 70,
-    backgroundColor: "aliceblue",
-    borderWidth: 1,
-    borderColor: "cornflowerblue",
-    borderRadius: 6,
-    justifyContent: "center",
+  rowLeft: {
+    flex: 1,
+  },
+  rowRight: {
+    marginLeft: spacing.sm,
+    alignItems: "flex-end",
+  },
+  rowMeta: {
+    flexDirection: "row",
     alignItems: "center",
+    gap: spacing.xs,
+    marginTop: spacing.xxs,
   },
-  boxLabel: {
-    fontSize: 14,
+  itemTitle: {
     fontWeight: "500",
-    color: "darkblue",
   },
-  infoText: {
-    fontSize: 14,
-    color: "dimgray",
-    marginBottom: 6,
-    lineHeight: 20,
+  itemDate: {
+    color: colors.textTertiary,
+  },
+  itemAmount: {
+    fontWeight: "600",
+  },
+  separator: {
+    height: spacing.xs,
+  },
+  emptyContainer: {
+    padding: spacing.xl,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
