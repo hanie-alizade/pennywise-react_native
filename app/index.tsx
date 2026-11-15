@@ -1,113 +1,115 @@
+import { useState } from "react";
 import type { ReactElement } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText, Button, Screen } from "@/components/ui";
+import { colors, radius, spacing } from "@/theme";
 
+/**
+ * Temporary UI kit demo screen for Step 1.2.
+ * Exercises all AppText variants and Button states.
+ * Note: This demo will be replaced by the routing skeleton in Step 2.1.
+ */
 export default function IndexRoute(): ReactElement {
+  const [clickCount, setClickCount] = useState(0);
+
+  const handleIncrement = (): void => {
+    setClickCount((prev) => prev + 1);
+  };
+
   return (
-    <View style={styles.screen}>
+    <Screen contentContainerStyle={styles.content} scrollable>
       <View style={styles.header}>
-        <Text style={styles.appTitle}>Pennywise</Text>
-        <Text style={styles.stepTitle}>Phase 1 — Foundation: Layout & Flexbox</Text>
+        <AppText style={styles.brandTitle} variant="title">
+          Pennywise
+        </AppText>
+        <AppText variant="label">Phase 1 — Theme and Core UI Demo</AppText>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionHeading}>Flexbox Demo: Row Layout</Text>
-        <Text style={styles.description}>
-          The container below uses flexDirection: &quot;row&quot; with justifyContent:
-          &quot;space-between&quot;.
-        </Text>
-
-        <View style={styles.rowDemo}>
-          <View style={styles.box}>
-            <Text style={styles.boxLabel}>Box 1</Text>
-          </View>
-          <View style={styles.box}>
-            <Text style={styles.boxLabel}>Box 2</Text>
-          </View>
-          <View style={styles.box}>
-            <Text style={styles.boxLabel}>Box 3</Text>
-          </View>
+      <View style={styles.card}>
+        <AppText style={styles.sectionTitle} variant="label">
+          Typography Variants
+        </AppText>
+        <View style={styles.group}>
+          <AppText variant="title">Title Variant (28pt bold)</AppText>
+          <AppText variant="body">
+            Body Variant: Calm teal and mint design language. This text
+            demonstrates standard readable body copy with comfortable line
+            height.
+          </AppText>
+          <AppText variant="label">Label Variant: Section & metadata</AppText>
+          <AppText variant="mono">
+            Mono Variant: MYR 1,250.00 | 2026-11-15
+          </AppText>
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionHeading}>Layout Concept</Text>
-        <Text style={styles.infoText}>
-          1. React Native defaults to flexDirection: &quot;column&quot; (unlike web which defaults to
-          &quot;row&quot;).
-        </Text>
-        <Text style={styles.infoText}>
-          2. All numeric dimensions (like padding: 16) are density-independent units (dp/points).
-        </Text>
-        <Text style={styles.infoText}>
-          3. Yoga calculates the layout in C++ before native views are drawn.
-        </Text>
+      <View style={styles.card}>
+        <AppText style={styles.sectionTitle} variant="label">
+          Button States & Variants
+        </AppText>
+        <View style={styles.group}>
+          <Button
+            accessibilityHint="Increments test interaction counter"
+            onPress={handleIncrement}
+            title={`Primary Button (Taps: ${clickCount})`}
+            variant="primary"
+          />
+          <Button
+            accessibilityHint="Demonstrates secondary button appearance"
+            title="Secondary Button"
+            variant="secondary"
+          />
+          <Button
+            accessibilityHint="Demonstrates danger button appearance"
+            title="Danger Button"
+            variant="danger"
+          />
+          <Button
+            accessibilityHint="Demonstrates ghost button appearance"
+            title="Ghost Button"
+            variant="ghost"
+          />
+          <Button
+            accessibilityHint="Demonstrates disabled button state"
+            disabled
+            title="Disabled Button"
+            variant="primary"
+          />
+          <Button
+            accessibilityHint="Demonstrates loading spinner button state"
+            isLoading
+            title="Loading Button"
+            variant="primary"
+          />
+        </View>
       </View>
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 24,
-    justifyContent: "flex-start",
+  content: {
+    padding: spacing.lg,
   },
   header: {
-    marginBottom: 24,
+    marginBottom: spacing.lg,
   },
-  appTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "black",
-    marginBottom: 4,
+  brandTitle: {
+    marginBottom: spacing.xxs,
   },
-  stepTitle: {
-    fontSize: 16,
-    color: "gray",
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionHeading: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "black",
-    marginBottom: 8,
-  },
-  description: {
-    fontSize: 14,
-    color: "dimgray",
-    marginBottom: 12,
-  },
-  rowDemo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 16,
+  card: {
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: "lightgray",
-    borderRadius: 8,
+    marginBottom: spacing.md,
+    padding: spacing.md,
   },
-  box: {
-    width: 70,
-    height: 70,
-    backgroundColor: "aliceblue",
-    borderWidth: 1,
-    borderColor: "cornflowerblue",
-    borderRadius: 6,
-    justifyContent: "center",
-    alignItems: "center",
+  sectionTitle: {
+    color: colors.primary,
+    marginBottom: spacing.sm,
   },
-  boxLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "darkblue",
-  },
-  infoText: {
-    fontSize: 14,
-    color: "dimgray",
-    marginBottom: 6,
-    lineHeight: 20,
+  group: {
+    gap: spacing.sm,
   },
 });

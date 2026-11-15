@@ -114,7 +114,12 @@ scripts/      check-rules.mjs
 
 ## Theme
 
-`src/theme` exports colors, spacing scale, radius, typography variants, and a small helper. `AppText` has variants (e.g. `title`, `body`, `label`, `mono`). Light theme first; dark mode is post-MVP. Platform-specific values are hidden inside theme or UI kit.
+`src/theme` is the single source of truth for design tokens (light mode; dark mode is post-MVP):
+- **Colors (`colors.ts`):** Calm teal and mint brand palette (`primary` #075B59, `accent` #55BFAF), off-white surfaces (`background` #F7F8F7, `surface` #FFFFFF), slate support colors (`support` #64758B), and muted financial semantic colors (`income` #27866F, `expense` #C96F68, `warning` #B9853D, `info` #647D98).
+- **Typography (`typography.ts`):** Modular size and line-height scale with preconfigured variants (`title`, `body`, `label`, `mono`) consumed via `AppText`.
+- **Spacing & Radius (`spacing.ts`, `radius.ts`):** 4px to 48px spacing scale, minimum 44px touch target token, and rounded corner radius tokens.
+- **Shadows (`shadows.ts`):** Restrained elevation/shadow objects for cards and floating elements using `colors.shadow`.
+- **Core UI kit (`src/components/ui`):** `AppText` (enforces typography hierarchy and scaling), `Screen` (safe area, keyboard avoidance, optional scroll), and `Button` (accessible `Pressable` with pressed, disabled, loading states). Platform-specific values are hidden inside theme or UI kit.
 
 ## Forms
 
