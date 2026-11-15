@@ -2,11 +2,11 @@
 
 Six phases, eighteen steps. Phases are built in order, one step at a time. One branch per phase (`phase-N-short-name`), one commit per step. Every step ends with `npm run check` passing and a decision record in `docs/decisions/` (see `docs/CONVENTIONS.md` section 10). No automated tests in this repo.
 
-Status: **not started** (update at the end of each phase).
+Status: **Phase 1 complete** (update at the end of each phase).
 
 | Phase | Steps | Branch | Status |
 | --- | --- | --- | --- |
-| 1 Foundation and UI kit | 1.1 Scaffold, 1.2 Theme and core UI, 1.3 Inputs and lists | `phase-1-foundation-ui` | planned |
+| 1 Foundation and UI kit | 1.1 Scaffold, 1.2 Theme and core UI, 1.3 Inputs and lists | `phase-1-foundation-ui` | done |
 | 2 Routing and API layer | 2.1 Routing, 2.2 Contract and config, 2.3 HTTP client | `phase-2-routing-api` | planned |
 | 3 Server state and auth | 3.1 Query setup, 3.2 Auth core, 3.3 Auth screens and gate | `phase-3-server-state-auth` | planned |
 | 4 Month overview | 4.1 Helpers, 4.2 Month data and navigation, 4.3 Overview UI | `phase-4-month-view` | planned |
